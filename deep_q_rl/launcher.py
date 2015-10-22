@@ -40,6 +40,9 @@ def process_args(args, defaults, description):
     parser.add_argument('--display-screen', dest="display_screen",
                         action='store_true', default=False,
                         help='Show the game screen.')
+    parser.add_argument('--record', dest="record",
+                        action='store_true', default=False,
+                        help='Record the screen into png files.')
     parser.add_argument('--experiment-prefix', dest="experiment_prefix",
                         default=None,
                         help='Experiment name prefix '
@@ -197,6 +200,12 @@ def launch(args, defaults, description):
             ale.setBool('sound', False) # Sound doesn't work on OSX
 
     ale.setBool('display_screen', parameters.display_screen)
+    if parameters.record:
+        if not os.path.exists('record'):
+            os.makedirs('record')
+        ale.setString("record_screen_dir", "record/")
+        ale.setString("record_sound_filename", "record/sound.wav")
+        ale.setInt("fragsize", 64)
     ale.setFloat('repeat_action_probability',
                  parameters.repeat_action_probability)
 
